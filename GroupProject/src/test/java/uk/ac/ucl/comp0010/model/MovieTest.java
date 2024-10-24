@@ -7,7 +7,8 @@ public class MovieTest {
 
   @Test
   void getAverageTest() {
-    assertEquals(4.0, student.getAverageRate());
+    Student student = null;
+    assertEquals(4.0, student.computeAverage());
   }
 
 }
