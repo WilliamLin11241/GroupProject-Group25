@@ -1,6 +1,9 @@
 package uk.ac.ucl.comp0010.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "module")
@@ -10,6 +13,9 @@ public class Module {
   private String code; // Module code (Primary Key)
   private String name; // Name of the module
   private boolean mnc; // Mandatory Non-Condonable flag
+
+  @ManyToOne
+  private Student registeredStudent; // Reference to the student who registered for this module
 
   public Module() {}
 
@@ -42,6 +48,14 @@ public class Module {
 
   public void setMnc(boolean mnc) {
     this.mnc = mnc;
+  }
+
+  public Student getRegisteredStudent() {
+    return registeredStudent;
+  }
+
+  public void setRegisteredStudent(Student registeredStudent) {
+    this.registeredStudent = registeredStudent;
   }
 
   @Override
