@@ -2,34 +2,35 @@ package uk.ac.ucl.comp0010.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import uk.ac.ucl.comp0010.exception.NoGradeAvailableException;
-import uk.ac.ucl.comp0010.exception.NoRegistrationException;
 
 @Entity
 @Table(name = "student")
 public class Student {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
+
   private String firstName;
   private String lastName;
   private String username;
   private String email;
 
-  // Additional fields for grades and registered modules
+  @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Grade> grades = new ArrayList<>();
+
+  @OneToMany(mappedBy = "registeredStudent", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Module> registeredModules = new ArrayList<>();
 
   public Student() {}
-
-  public Student(int id, String firstName, String lastName, String username, String email) {
-    this.id = id;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.username = username;
-    this.email = email;
-  }
 
   // Compute average grade
   public float computeAverage() {
@@ -55,11 +56,20 @@ public class Student {
   }
 
   // Register the student for a module
+
+  public Student(int id, String firstName, String lastName, String username, String email) {
+    this.id = id;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.username = username;
+    this.email = email;
+  }
+
+  // Methods to manage grades and modules
   public void registerModule(Module module) {
     if (!registeredModules.contains(module)) {
       registeredModules.add(module);
-    } else {
-      throw new NoRegistrationException("Already registered for this module");
+      module.setRegisteredStudent(this); // Maintain bidirectional relationship
     }
   }
 
@@ -102,5 +112,13 @@ public class Student {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public List<Module> getRegisteredModules() {
+    return registeredModules;
+  }
+
+  public void setRegisteredModules(List<Module> registeredModules) {
+    this.registeredModules = registeredModules;
   }
 }
