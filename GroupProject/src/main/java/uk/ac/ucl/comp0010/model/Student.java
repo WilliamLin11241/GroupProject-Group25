@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import uk.ac.ucl.comp0010.exception.NoGradeAvailableException;
 
 @Entity
 @Table(name = "student")
@@ -30,6 +31,31 @@ public class Student {
   private List<Module> registeredModules = new ArrayList<>();
 
   public Student() {}
+
+  // Compute average grade
+  public float computeAverage() {
+    if (grades.isEmpty()) {
+      throw new NoGradeAvailableException("No grades available for student");
+    }
+    float total = 0;
+    for (Grade grade : grades) {
+      total += grade.getScore();
+    }
+    return total / grades.size();
+  }
+
+  // Add grade to the student's list of grades
+  public void addGrade(Grade grade) {
+    grades.add(grade);
+  }
+
+  // Get grade for a specific module
+  public Grade getGrade(Module module) {
+    return grades.stream().filter(g -> g.getModule().equals(module)).findFirst()
+        .orElseThrow(() -> new NoGradeAvailableException("No grade available for module"));
+  }
+
+  // Register the student for a module
 
   public Student(int id, String firstName, String lastName, String username, String email) {
     this.id = id;
