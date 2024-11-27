@@ -3,14 +3,7 @@ package uk.ac.ucl.comp0010.controller;
 import java.util.List;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uk.ac.ucl.comp0010.model.Student;
 import uk.ac.ucl.comp0010.repository.StudentRepository;
 
@@ -63,9 +56,9 @@ public class StudentController {
    * @return the student object
    */
   @GetMapping("/{studentId}")
-  public ResponseEntity<Student> getStudentById(@PathVariable Long studentId) {
+  public ResponseEntity<Student> getStudentById(@PathVariable Integer studentId) {
     Student student = studentRepository.findById(studentId)
-        .orElseThrow(() -> new RuntimeException("Student not found"));
+            .orElseThrow(() -> new RuntimeException("Student not found"));
     return ResponseEntity.ok(student);
   }
 
@@ -77,10 +70,10 @@ public class StudentController {
    * @return updated student object
    */
   @PutMapping("/update/{studentId}")
-  public ResponseEntity<Student> updateStudent(@PathVariable Long studentId,
-      @RequestBody Map<String, String> params) {
+  public ResponseEntity<Student> updateStudent(@PathVariable Integer studentId,
+                                               @RequestBody Map<String, String> params) {
     Student student = studentRepository.findById(studentId)
-        .orElseThrow(() -> new RuntimeException("Student not found"));
+            .orElseThrow(() -> new RuntimeException("Student not found"));
 
     student.setFirstName(params.get("firstName"));
     student.setLastName(params.get("lastName"));
@@ -98,9 +91,9 @@ public class StudentController {
    * @return response message
    */
   @DeleteMapping("/delete/{studentId}")
-  public ResponseEntity<String> deleteStudent(@PathVariable Long studentId) {
+  public ResponseEntity<String> deleteStudent(@PathVariable Integer studentId) {
     Student student = studentRepository.findById(studentId)
-        .orElseThrow(() -> new RuntimeException("Student not found"));
+            .orElseThrow(() -> new RuntimeException("Student not found"));
 
     studentRepository.delete(student);
     return ResponseEntity.ok("Student deleted successfully");
