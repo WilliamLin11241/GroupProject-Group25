@@ -1,54 +1,44 @@
--- Drop tables if they exist
-DROP TABLE IF EXISTS grade;
-DROP TABLE IF EXISTS registration;
-DROP TABLE IF EXISTS module;
-DROP TABLE IF EXISTS student;
-DROP TABLE IF EXISTS users;
+-- Drop existing tables if they exist
+DROP TABLE IF EXISTS grade CASCADE;
+DROP TABLE IF EXISTS registration CASCADE;
+DROP TABLE IF EXISTS student CASCADE;
+DROP TABLE IF EXISTS module CASCADE;
 
--- Create tables
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    password VARCHAR(100) NOT NULL
+-- Create 'student' table
+CREATE TABLE student(
+                        id INT PRIMARY KEY,
+                        firstName VARCHAR(30),
+                        lastName VARCHAR(30),
+                        username VARCHAR(30),
+                        email VARCHAR(50)
 );
 
-CREATE TABLE student (
-    id SERIAL PRIMARY KEY,
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    username VARCHAR(50),
-    email VARCHAR(100)
+-- Create 'module' table
+CREATE TABLE module(
+                       code VARCHAR(10) PRIMARY KEY,
+                       name VARCHAR(100),
+                       mnc BOOLEAN
 );
 
-CREATE TABLE module (
-    code VARCHAR(10) PRIMARY KEY,
-    name VARCHAR(100)
+-- Create 'grade' table
+CREATE TABLE grade(
+                      id SERIAL PRIMARY KEY,
+                      score INT,
+                      student_id INT,
+                      module_code VARCHAR(10),
+                      FOREIGN KEY (student_id)
+                          REFERENCES student (id),
+                      FOREIGN KEY (module_code)
+                          REFERENCES module (code)
 );
 
-CREATE TABLE registration (
-    id SERIAL PRIMARY KEY,
-    student_id INT,
-    module_code VARCHAR(10),
-    FOREIGN KEY (student_id) REFERENCES student(id),
-    FOREIGN KEY (module_code) REFERENCES module(code)
+-- Create 'registration' table
+CREATE TABLE registration(
+                             id SERIAL PRIMARY KEY,
+                             student_id INT,
+                             module_code VARCHAR(10),
+                             FOREIGN KEY (student_id)
+                                 REFERENCES student (id),
+                             FOREIGN KEY (module_code)
+                                 REFERENCES module (code)
 );
-
-CREATE TABLE grade (
-    id SERIAL PRIMARY KEY,
-    student_id INT,
-    module_code VARCHAR(10),
-    score DECIMAL(5,2),
-    FOREIGN KEY (student_id) REFERENCES student(id),
-    FOREIGN KEY (module_code) REFERENCES module(code)
-);
-
--- Insert data
-INSERT INTO users (username, email, password) VALUES ('user2', 'user2@example.com', 'password2');
-INSERT INTO users (username, email, password) VALUES ('user3', 'user3@example.com', 'password3');
-
-INSERT INTO student (first_name, last_name, username, email) VALUES 
-('John', 'Doe', 'jdoe', 'jdoe@example.com');
-
-INSERT INTO module (code, name) VALUES 
-('CS101', 'Computer Science 101');
