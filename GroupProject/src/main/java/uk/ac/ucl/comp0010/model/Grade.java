@@ -1,11 +1,6 @@
 package uk.ac.ucl.comp0010.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "grade")
@@ -18,9 +13,11 @@ public class Grade {
   private int score;
 
   @ManyToOne
+  @JoinColumn(name = "student_id", nullable = false)
   private Student student;
 
   @ManyToOne
+  @JoinColumn(name = "module_code", nullable = false)
   private Module module;
 
   public Grade() {}
