@@ -1,62 +1,76 @@
 package uk.ac.ucl.comp0010.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "module")
 public class Module {
 
-  @Id
-  private String code; // Module code (Primary Key)
-  private String name; // Name of the module
-  private boolean mnc; // Mandatory Non-Condonable flag
+    @Id
+    private String code;
 
-  public Module() {}
+    private String name;
 
-  public Module(String code, String name, boolean mnc) {
-    this.code = code;
-    this.name = name;
-    this.mnc = mnc;
-  }
+    private boolean mnc; // Mandatory Non-Condonable
 
-  // Getters and Setters
-  public String getCode() {
-    return code;
-  }
+    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Grade> grades = new ArrayList<>();
 
-  public void setCode(String code) {
-    this.code = code;
-  }
+    public Module() {}
 
-  public String getName() {
-    return name;
-  }
+    public Module(String code, String name, boolean mnc) {
+        this.code = code;
+        this.name = name;
+        this.mnc = mnc;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    // Getters and Setters
+    public String getCode() {
+        return code;
+    }
 
-  public boolean isMnc() {
-    return mnc;
-  }
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-  public void setMnc(boolean mnc) {
-    this.mnc = mnc;
-  }
+    public String getName() {
+        return name;
+    }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null || getClass() != obj.getClass())
-      return false;
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    Module module = (Module) obj;
-    return code != null ? code.equals(module.code) : module.code == null;
-  }
+    public boolean isMnc() {
+        return mnc;
+    }
 
-  @Override
-  public int hashCode() {
-    return code != null ? code.hashCode() : 0;
-  }
+    public void setMnc(boolean mnc) {
+        this.mnc = mnc;
+    }
+
+    public List<Grade> getGrades() {
+        return grades;
+    }
+
+    public void setGrades(List<Grade> grades) {
+        this.grades = grades;
+    }
+    
+    @Override
+    public String toString() {
+        return "Module{" +
+                "code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", mnc=" + mnc +
+                '}';
+    }
+    
 }

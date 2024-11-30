@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .section {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .section h2 {
+            margin-top: 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, button, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .output {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Student Management System</h1>
+    <div class="container">
+        <!-- Student Section -->
+        <div class="section">
+            <h2>Student Information</h2>
+            <label for="studentId">Student ID</label>
+            <input type="text" id="studentId" placeholder="Enter Student ID">
+            
+            <label for="studentFirstName">First Name</label>
+            <input type="text" id="studentFirstName" placeholder="Enter First Name">
+            
+            <label for="studentLastName">Last Name</label>
+            <input type="text" id="studentLastName" placeholder="Enter Last Name">
+            
+            <label for="studentEmail">Email</label>
+            <input type="email" id="studentEmail" placeholder="Enter Email">
+            
+            <button onclick="addStudent()">Add Student</button>
+            <button onclick="fetchStudents()">View All Students</button>
+            <div class="output" id="studentOutput"></div>
+        </div>
+
+        <!-- Module Section -->
+        <div class="section">
+            <h2>Module Information</h2>
+            <label for="moduleCode">Module Code</label>
+            <input type="text" id="moduleCode" placeholder="Enter Module Code">
+            
+            <label for="moduleName">Module Name</label>
+            <input type="text" id="moduleName" placeholder="Enter Module Name">
+            
+            <label for="moduleMnc">Is Mandatory (true/false)</label>
+            <select id="moduleMnc">
+                <option value="true">True</option>
+                <option value="false">False</option>
+            </select>
+            
+            <button onclick="addModule()">Add Module</button>
+            <button onclick="fetchModules()">View All Modules</button>
+            <div class="output" id="moduleOutput"></div>
+        </div>
+
+        <!-- Grade Section -->
+        <div class="section">
+            <h2>Grade Information</h2>
+            <label for="gradeStudentId">Student ID</label>
+            <input type="text" id="gradeStudentId" placeholder="Enter Student ID">
+            
+            <label for="gradeModuleCode">Module Code</label>
+            <input type="text" id="gradeModuleCode" placeholder="Enter Module Code">
+            
+            <label for="gradeScore">Score</label>
+            <input type="number" id="gradeScore" placeholder="Enter Score">
+            
+            <button onclick="addGrade()">Add Grade</button>
+            <button onclick="fetchGrades()">View All Grades</button>
+            <div class="output" id="gradeOutput"></div>
+        </div>
+    </div>
+
+    <script>
+        const apiBaseUrl = "http://localhost:2800";
+
+        // Student functions
+        async function addStudent() {
+            const student = {
+                id: document.getElementById("studentId").value,
+                firstName: document.getElementById("studentFirstName").value,
+                lastName: document.getElementById("studentLastName").value,
+                email: document.getElementById("studentEmail").value,
+            };
+
+            const response = await fetch(`${apiBaseUrl}/students`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(student),
+            });
+
+            const result = await response.json();
+            document.getElementById("studentOutput").innerText = JSON.stringify(result, null, 2);
+        }
+
+        async function fetchStudents() {
+            const response = await fetch(`${apiBaseUrl}/students`);
+            const result = await response.json();
+            document.getElementById("studentOutput").innerText = JSON.stringify(result, null, 2);
+        }
+
+        // Module functions
+        async function addModule() {
+            const module = {
+                module_code: document.getElementById("moduleCode").value,
+                name: document.getElementById("moduleName").value,
+                mnc: document.getElementById("moduleMnc").value,
+            };
+
+            const response = await fetch(`${apiBaseUrl}/Module/add`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(module),
+            });
+
+            const result = await response.json();
+            document.getElementById("moduleOutput").innerText = JSON.stringify(result, null, 2);
+        }
+
+        async function fetchModules() {
+            const response = await fetch(`${apiBaseUrl}/Module/all`);
+            const result = await response.json();
+            document.getElementById("moduleOutput").innerText = JSON.stringify(result, null, 2);
+        }
+
+        // Grade functions
+        async function addGrade() {
+            const grade = {
+                student_id: document.getElementById("gradeStudentId").value,
+                module_code: document.getElementById("gradeModuleCode").value,
+                score: document.getElementById("gradeScore").value,
+            };
+
+            const response = await fetch(`${apiBaseUrl}/Grade/addGrade`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(grade),
+            });
+
+            const result = await response.json();
+            document.getElementById("gradeOutput").innerText = JSON.stringify(result, null, 2);
+        }
+
+        async function fetchGrades() {
+            const response = await fetch(`${apiBaseUrl}/Grade/allGrades`);
+            const result = await response.json();
+            document.getElementById("gradeOutput").innerText = JSON.stringify(result, null, 2);
+        }
+    </script>
+</body>
+</html>

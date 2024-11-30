@@ -1,41 +1,59 @@
 package uk.ac.ucl.comp0010.model;
 
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "registration")
 public class Registration {
 
-  @Id
-  @ManyToOne
-  private Student student;
+    @EmbeddedId
+    private RegistrationId id;
 
-  @Id
-  @ManyToOne
-  private Module module;
+    @ManyToOne
+    @MapsId("studentId")
+    @JoinColumn(name = "student_id")
+    private Student student;
 
-  public Registration() {}
+    @ManyToOne
+    @MapsId("moduleCode")
+    @JoinColumn(name = "module_code")
+    private Module module;
 
-  public Registration(Student student, Module module) {
-    this.student = student;
-    this.module = module;
-  }
+    public Registration() {}
 
-  // Getters and Setters
-  public Student getStudent() {
-    return student;
-  }
+    public Registration(Student student, Module module) {
+        this.student = student;
+        this.module = module;
+        this.id = new RegistrationId(student.getId(), module.getCode());
+    }
 
-  public void setStudent(Student student) {
-    this.student = student;
-  }
+    // Getters and Setters
+    public RegistrationId getId() {
+        return id;
+    }
 
-  public Module getModule() {
-    return module;
-  }
+    public void setId(RegistrationId id) {
+        this.id = id;
+    }
 
-  public void setModule(Module module) {
-    this.module = module;
-  }
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public Module getModule() {
+        return module;
+    }
+
+    public void setModule(Module module) {
+        this.module = module;
+    }
 }
