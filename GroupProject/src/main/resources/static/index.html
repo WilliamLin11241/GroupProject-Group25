@@ -96,6 +96,23 @@
             <div class="output" id="moduleOutput"></div>
         </div>
 
+
+        <!-- Registration Section -->
+        <div class="section">
+            <h2>Registration Information</h2>
+            <label for="registrationStudentId">Student ID</label>
+            <input type="text" id="registrationStudentId" placeholder="Enter Student ID">
+
+            <label for="registrationModuleCode">Module Code</label>
+            <input type="text" id="registrationModuleCode" placeholder="Enter Module Code">
+
+            <button onclick="registerStudent()">Register Student to Module</button>
+            <button onclick="unregisterStudent()">Unregister Student from Module</button>
+            <button onclick="fetchModulesByStudent()">View Modules Registered by Student</button>
+            <button onclick="fetchStudentsByModule()">View Students Registered to Module</button>
+            <div class="output" id="registrationOutput"></div>
+        </div>
+
         <!-- Grade Section -->
         <div class="section">
             <h2>Grade Information</h2>
@@ -166,6 +183,87 @@
             document.getElementById("moduleOutput").innerText = JSON.stringify(result, null, 2);
         }
 
+        // Registration functions
+        // Register a student to a module
+        async function registerStudent() {
+            const studentId = document.getElementById("registrationStudentId").value;
+            const moduleCode = document.getElementById("registrationModuleCode").value;
+
+            try {
+                const response = await fetch(`${apiBaseUrl}/registrations/register`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams({ studentId, moduleCode })
+                });
+
+                const result = await response.text();
+                document.getElementById("registrationOutput").innerText = result;
+            } catch (error) {
+                console.error("Error occurred during registration:", error);
+            }
+        }
+
+        // Unregister a student from a module
+        async function unregisterStudent() {
+            const studentId = document.getElementById("registrationStudentId").value;
+            const moduleCode = document.getElementById("registrationModuleCode").value;
+
+            try {
+                const response = await fetch(`${apiBaseUrl}/registrations/unregister`, {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams({ studentId, moduleCode })
+                });
+
+                const result = await response.text();
+                document.getElementById("registrationOutput").innerText = result;
+            } catch (error) {
+                console.error("Error occurred during unregistration:", error);
+            }
+        }
+
+        // Get all modules registered by a student
+        async function fetchModulesByStudent() {
+            const studentId = document.getElementById("registrationStudentId").value;
+
+            try {
+                const response = await fetch(`${apiBaseUrl}/registrations/student/${studentId}`);
+                if (response.ok) {
+                    const modules = await response.json();
+                    document.getElementById("registrationOutput").innerText = JSON.stringify(modules, null, 2);
+                } else {
+                    throw new Error("Unable to fetch modules");
+                }
+            } catch (error) {
+                console.error("Error occurred while fetching modules:", error);
+            }
+        }
+
+        // Get all students registered to a specific module
+        async function fetchStudentsByModule() {
+            const moduleCode = document.getElementById("registrationModuleCode").value.trim();
+
+            if (!moduleCode) {
+                document.getElementById("registrationOutput").innerText = "Module code cannot be empty.";
+                return;
+            }
+
+            try {
+                console.log("Fetching students for module code:", moduleCode);
+                const response = await fetch(`${apiBaseUrl}/registrations/module/${moduleCode}`);
+                if (response.ok) {
+                    const students = await response.json();
+                    document.getElementById("registrationOutput").innerText = JSON.stringify(students, null, 2);
+                } else {
+                    throw new Error(`Unable to fetch students. Status: ${response.status} - ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error("Error occurred while fetching students:", error);
+                document.getElementById("registrationOutput").innerText = `Error: ${error.message}`;
+            }
+        }
+
+        
         // Grade functions
         async function addGrade() {
             const grade = {

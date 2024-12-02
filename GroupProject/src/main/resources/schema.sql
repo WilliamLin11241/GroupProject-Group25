@@ -28,9 +28,9 @@ CREATE TABLE module (
 );
 
 CREATE TABLE registration (
-    id SERIAL PRIMARY KEY,
     student_id INT,
     module_code VARCHAR(10),
+    PRIMARY KEY (student_id, module_code),
     FOREIGN KEY (student_id) REFERENCES student(id),
     FOREIGN KEY (module_code) REFERENCES module(code)
 );
