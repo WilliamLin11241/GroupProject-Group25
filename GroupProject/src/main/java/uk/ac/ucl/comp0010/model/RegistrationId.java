@@ -10,7 +10,7 @@ public class RegistrationId implements Serializable {
     private Integer studentId;
     private String moduleCode;
 
-    // æ„é€ å‡½æ•°
+    // ¹¹Ôìº¯Êı
     public RegistrationId() {}
 
     public RegistrationId(Integer studentId, String moduleCode) {
@@ -36,7 +36,7 @@ public class RegistrationId implements Serializable {
         this.moduleCode = moduleCode;
     }
 
-    // é‡å†™ equals() å’Œ hashCode()
+    // ÖØĞ´ equals() ºÍ hashCode()
 
     @Override
     public boolean equals(Object o) {

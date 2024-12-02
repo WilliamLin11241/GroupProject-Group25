@@ -1,56 +1,59 @@
 package uk.ac.ucl.comp0010.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "registration")
 public class Registration {
 
-  @EmbeddedId
-  private RegistrationId id;
+    @EmbeddedId
+    private RegistrationId id;
 
-  @ManyToOne
-  @MapsId("studentId")
-  @JoinColumn(name = "student_id")
-  private Student student;
+    @ManyToOne
+    @MapsId("studentId")
+    @JoinColumn(name = "student_id")
+    private Student student;
 
-  @ManyToOne
-  @MapsId("moduleCode")
-  @JoinColumn(name = "module_code")
-  private Module module;
+    @ManyToOne
+    @MapsId("moduleCode")
+    @JoinColumn(name = "module_code")
+    private Module module;
 
-  // 构造函数
-  public Registration() {}
+    public Registration() {}
 
-  public Registration(Student student, Module module) {
-    this.student = student;
-    this.module = module;
-    this.id = new RegistrationId(student.getId(), module.getCode());
-  }
+    public Registration(Student student, Module module) {
+        this.student = student;
+        this.module = module;
+        this.id = new RegistrationId(student.getId(), module.getCode());
+    }
 
-  // Getters and Setters
+    // Getters and Setters
+    public RegistrationId getId() {
+        return id;
+    }
 
-  public RegistrationId getId() {
-    return id;
-  }
+    public void setId(RegistrationId id) {
+        this.id = id;
+    }
 
-  public void setId(RegistrationId id) {
-    this.id = id;
-  }
+    public Student getStudent() {
+        return student;
+    }
 
-  public Student getStudent() {
-    return student;
-  }
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 
-  public void setStudent(Student student) {
-    this.student = student;
-  }
+    public Module getModule() {
+        return module;
+    }
 
-  public Module getModule() {
-    return module;
-  }
-
-  public void setModule(Module module) {
-    this.module = module;
-  }
+    public void setModule(Module module) {
+        this.module = module;
+    }
 }

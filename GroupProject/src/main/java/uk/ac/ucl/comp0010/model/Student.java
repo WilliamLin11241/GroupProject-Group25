@@ -2,123 +2,112 @@ package uk.ac.ucl.comp0010.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import uk.ac.ucl.comp0010.exception.NoGradeAvailableException;
 
 @Entity
 @Table(name = "student")
 public class Student {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+    @Id
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-  private String firstName;
-  private String lastName;
-  private String username;
-  private String email;
+    @Column(name = "firstName")
+    private String firstName;
+    @Column(name = "lastName")
+    private String lastName;
+    private String email;
 
-  @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Grade> grades = new ArrayList<>();
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Grade> grades = new ArrayList<>();
 
-  @OneToMany(mappedBy = "registeredStudent", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Module> registeredModules = new ArrayList<>();
 
-  public Student() {}
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Registration> registrations = new ArrayList<>();
 
-  // Compute average grade
-  public float computeAverage() {
-    if (grades.isEmpty()) {
-      throw new NoGradeAvailableException("No grades available for student");
+    public Student() {}
+
+    public Student(int Id, String firstName, String lastName, String email) {
+        this.id = Id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        
     }
-    float total = 0;
-    for (Grade grade : grades) {
-      total += grade.getScore();
+
+    // Getters and Setters
+    public int getId() {
+        return id;
     }
-    return total / grades.size();
-  }
 
-  // Add grade to the student's list of grades
-  public void addGrade(Grade grade) {
-    grades.add(grade);
-  }
-
-  // Get grade for a specific module
-  public Grade getGrade(Module module) {
-    return grades.stream().filter(g -> g.getModule().equals(module)).findFirst()
-        .orElseThrow(() -> new NoGradeAvailableException("No grade available for module"));
-  }
-
-  // Register the student for a module
-
-  public Student(int id, String firstName, String lastName, String username, String email) {
-    this.id = id;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.username = username;
-    this.email = email;
-  }
-
-  // Methods to manage grades and modules
-  public void registerModule(Module module) {
-    if (!registeredModules.contains(module)) {
-      registeredModules.add(module);
-      module.setRegisteredStudent(this); // Maintain bidirectional relationship
+    public void setId(int id) {
+        this.id = id;
     }
-  }
 
-  // Getters and Setters
-  public int getId() {
-    return id;
-  }
+    public String getFirstName() {
+        return firstName;
+    }
 
-  public void setId(int id) {
-    this.id = id;
-  }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-  public String getFirstName() {
-    return firstName;
-  }
+    public String getLastName() {
+        return lastName;
+    }
 
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-  public String getLastName() {
-    return lastName;
-  }
+    public String getEmail() {
+        return email;
+    }
 
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
-  }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-  public String getUsername() {
-    return username;
-  }
+    public List<Grade> getGrades() {
+        return grades;
+    }
+    
+    public void setGrades(List<Grade> grades) {
+        this.grades = grades;
+    }
+    
 
-  public void setUsername(String username) {
-    this.username = username;
-  }
+    public List<Registration> getRegistrations() {
+        return registrations;
+    }
 
-  public String getEmail() {
-    return email;
-  }
+    public void setRegistrations(List<Registration> registrations) {
+        this.registrations = registrations;
+    }
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 
-  public List<Module> getRegisteredModules() {
-    return registeredModules;
-  }
+    @Override
+    public String toString(){
+        return "Student{id=" + id + ", firstName='" + firstName + "', lastName='" + lastName + "', email='" + email + "'}";
+    }
 
-  public void setRegisteredModules(List<Module> registeredModules) {
-    this.registeredModules = registeredModules;
-  }
+    @Override
+    public boolean equals(Object object) {
+        Student student = (Student) object;
+        return this.id == student.id && this.firstName.equals(student.firstName) && this.lastName.equals(student.lastName) && this.email.equals(student.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
 }

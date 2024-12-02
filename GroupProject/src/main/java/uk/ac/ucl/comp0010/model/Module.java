@@ -1,76 +1,76 @@
 package uk.ac.ucl.comp0010.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "module")
 public class Module {
 
-  @Id
-  private String code; // Module code (Primary Key)
-  private String name; // Name of the module
-  private boolean mnc; // Mandatory Non-Condonable flag
+    @Id
+    private String code;
 
-  @ManyToOne
-  private Student registeredStudent; // Reference to the student who registered for this module
+    private String name;
 
-  public Module() {}
+    private boolean mnc; // Mandatory Non-Condonable
 
-  public Module(String code, String name, boolean mnc) {
-    this.code = code;
-    this.name = name;
-    this.mnc = mnc;
-  }
+    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Grade> grades = new ArrayList<>();
 
-  // Getters and Setters
-  public String getCode() {
-    return code;
-  }
+    public Module() {}
 
-  public void setCode(String code) {
-    this.code = code;
-  }
+    public Module(String code, String name, boolean mnc) {
+        this.code = code;
+        this.name = name;
+        this.mnc = mnc;
+    }
 
-  public String getName() {
-    return name;
-  }
+    // Getters and Setters
+    public String getCode() {
+        return code;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-  public boolean isMnc() {
-    return mnc;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public void setMnc(boolean mnc) {
-    this.mnc = mnc;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public Student getRegisteredStudent() {
-    return registeredStudent;
-  }
+    public boolean isMnc() {
+        return mnc;
+    }
 
-  public void setRegisteredStudent(Student registeredStudent) {
-    this.registeredStudent = registeredStudent;
-  }
+    public void setMnc(boolean mnc) {
+        this.mnc = mnc;
+    }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null || getClass() != obj.getClass())
-      return false;
+    public List<Grade> getGrades() {
+        return grades;
+    }
 
-    Module module = (Module) obj;
-    return code != null ? code.equals(module.code) : module.code == null;
-  }
-
-  @Override
-  public int hashCode() {
-    return code != null ? code.hashCode() : 0;
-  }
+    public void setGrades(List<Grade> grades) {
+        this.grades = grades;
+    }
+    
+    @Override
+    public String toString() {
+        return "Module{" +
+                "code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", mnc=" + mnc +
+                '}';
+    }
+    
 }
