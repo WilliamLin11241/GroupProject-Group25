@@ -2,18 +2,17 @@ package uk.ac.ucl.comp0010.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class GradeTest {
+public class GradeTest {
 
     private Grade grade;
     private Student student;
     private Module module;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         // Initialize mock Student and Module
         student = new Student(1, "John", "Doe", "john.doe@example.com");
         module = new Module("COMP0010", "Software Engineering", true);
@@ -24,7 +23,7 @@ class GradeTest {
     }
 
     @Test
-    void testGettersAndSetters() {
+    public void testGettersAndSetters() {
         // Assert initial values
         assertEquals(1, grade.getId());
         assertEquals(85, grade.getScore());
@@ -37,7 +36,7 @@ class GradeTest {
     }
 
     @Test
-    void testConstructor() {
+    public void testConstructor() {
         Grade newGrade = new Grade(95, student, module);
         assertEquals(95, newGrade.getScore());
         assertEquals(student, newGrade.getStudent());
@@ -45,7 +44,7 @@ class GradeTest {
     }
 
     @Test
-    void testEqualsAndHashCode() {
+    public void testEqualsAndHashCode() {
         // Create another Grade with the same properties
         Grade anotherGrade = new Grade(85, student, module);
         anotherGrade.setId(1);
@@ -64,7 +63,7 @@ class GradeTest {
     }
 
     @Test
-    void testToString() {
+    public void testToString() {
         String expected = "Grade{id=1, score=85, student=Student{id=1, firstName='John', lastName='Doe', email='john.doe@example.com'}, module=Module{code='COMP0010', name='Software Engineering', mnc=true}}";
         assertEquals(expected, grade.toString());
     }

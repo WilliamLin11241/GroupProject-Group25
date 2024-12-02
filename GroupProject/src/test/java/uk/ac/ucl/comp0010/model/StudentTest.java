@@ -10,12 +10,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class StudentTest {
+public class StudentTest {
 
     private Student student;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         student = new Student();
         student.setId(1);
         student.setFirstName("John");
@@ -24,7 +24,7 @@ class StudentTest {
     }
 
     @Test
-    void testGettersAndSetters() {
+    public void testGettersAndSetters() {
         assertEquals(1, student.getId());
         assertEquals("John", student.getFirstName());
         assertEquals("Doe", student.getLastName());
@@ -32,7 +32,7 @@ class StudentTest {
     }
 
     @Test
-    void testGradesManagement() {
+    public void testGradesManagement() {
         // Create mock grades
         Grade grade1 = new Grade(85, student, new Module("COMP0010", "Software Engineering", true));
         Grade grade2 = new Grade(90, student, new Module("COMP0020", "Database Systems", false));
@@ -50,7 +50,7 @@ class StudentTest {
     }
 
     @Test
-    void testRegistrationManagement() {
+    public void testRegistrationManagement() {
         // Create mock registrations
         Registration reg1 = new Registration(student, new Module("COMP0010", "Software Engineering", true));
         Registration reg2 = new Registration(student, new Module("COMP0020", "Database Systems", false));
@@ -68,13 +68,13 @@ class StudentTest {
     }
 
     @Test
-    void testToString() {
+    public void testToString() {
         String expected = "Student{id=1, firstName='John', lastName='Doe', email='john.doe@example.com'}";
         assertEquals(expected, student.toString());
     }
 
     @Test
-    void testEqualsAndHashCode() {
+    public void testEqualsAndHashCode() {
         // Create another student with the same ID
         Student anotherStudent = new Student();
         anotherStudent.setId(1);
