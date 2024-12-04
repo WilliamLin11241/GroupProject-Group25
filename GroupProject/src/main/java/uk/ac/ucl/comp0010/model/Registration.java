@@ -1,6 +1,6 @@
 package uk.ac.ucl.comp0010.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
