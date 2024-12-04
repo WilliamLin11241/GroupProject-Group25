@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Management System</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,6 +56,7 @@
 </head>
 <body>
     <h1>Student Management System</h1>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <div class="container">
         <!-- Student Section -->
         <div class="section">
@@ -129,10 +131,22 @@
             <button onclick="fetchGrades()">View All Grades</button>
             <div class="output" id="gradeOutput"></div>
         </div>
+
+       
+
+        <!-- Input for module code to view grade statistics -->
+        <div class="section">
+            <h2>View Grade Statistics</h2>
+            <label for="gradeModuleCodeForChart">Enter Module Code to View Grade Statistics:</label>
+            <input type="text" id="gradeModuleCodeForChart" placeholder="Module Code">
+            <button onclick="showModuleGrades()">View Grade Chart</button>
+            <canvas id="gradesChart"></canvas>
+        </div>
     </div>
 
     <script>
         const apiBaseUrl = "http://localhost:2800";
+
 
         // Student functions
         async function addStudent() {
@@ -287,6 +301,78 @@
             const result = await response.json();
             document.getElementById("gradeOutput").innerText = JSON.stringify(result, null, 2);
         }
+
+        // Function to fetch grades for a specific module and display them in a chart
+        async function showModuleGrades() {
+            const moduleCode = document.getElementById("gradeModuleCodeForChart").value.trim();
+
+            // Ensure the module code is not empty
+            if (!moduleCode) {
+                alert("Module code cannot be empty. Please enter a valid module code.");
+                return;
+            }
+
+            try {
+                // 确保 API 路径与后端 API 映射一致
+                const response = await fetch(`${apiBaseUrl}/registrations/module/${moduleCode}/grades`);
+                if (response.ok) {
+                    const grades = await response.json();
+                    drawChart(grades);
+                } else {
+                    alert("Unable to retrieve grades data. Please check if the module code is correct.");
+                }
+            } catch (error) {
+                console.error("Error occurred while retrieving grade data:", error);
+                alert("An error occurred while fetching grade data. Please try again later.");
+            }
+        }
+
+        // Function to draw a chart with the given grades
+        function drawChart(grades) {
+            // Get the context of the canvas element
+            const ctx = document.getElementById('gradesChart').getContext('2d');
+
+            // Extract scores from grades data
+            const scores = grades.map(grade => grade.score);
+
+            // Log the grades data for debugging
+            console.log('grades data:', grades);
+            console.log('scores:', scores);
+
+            // Destroy existing chart if any, to prevent overlapping of multiple charts
+            if (window.gradesChart && typeof window.gradesChart.destroy === 'function') {
+                window.gradesChart.destroy();
+            } else {
+                console.warn('window.gradesChart is not a Chart instance or destroy method is not available.');
+            }
+
+            // Create a new bar chart using Chart.js library
+            window.gradesChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: scores.map((_, index) => `Student ${index + 1}`), // Label each bar by student index
+                    datasets: [{
+                        label: 'Student Grades',
+                        data: scores,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true // Y-axis starts from zero
+                        }
+                    }
+                }
+            });
+
+            // Log the chart instance for debugging
+            console.log('New gradesChart instance:', window.gradesChart);
+        }
+
+
     </script>
 </body>
 </html>

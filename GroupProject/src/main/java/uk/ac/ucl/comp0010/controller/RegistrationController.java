@@ -2,14 +2,17 @@ package uk.ac.ucl.comp0010.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import uk.ac.ucl.comp0010.model.Grade;
 import uk.ac.ucl.comp0010.model.Module;
 import uk.ac.ucl.comp0010.model.Student;
 import uk.ac.ucl.comp0010.service.RegistrationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-
-
+// import java.util.ArrayList;
+// import java.util.Map;
+// import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -62,4 +65,19 @@ public class RegistrationController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unregistration failed: " + e.getMessage());
         }
     }
+
+    @GetMapping("/module/{moduleCode}/grades")
+    public ResponseEntity<List<Grade>> getGradesByModule(@PathVariable String moduleCode) {
+        try {
+            List<Grade> grades = registrationService.getGradesByModule(moduleCode);
+            if (grades.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            return ResponseEntity.ok(grades);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    
 }

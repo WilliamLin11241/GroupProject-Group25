@@ -2,10 +2,13 @@ package uk.ac.ucl.comp0010.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import uk.ac.ucl.comp0010.model.Grade;
 import uk.ac.ucl.comp0010.model.Module;
 import uk.ac.ucl.comp0010.model.Registration;
 import uk.ac.ucl.comp0010.model.RegistrationId;
 import uk.ac.ucl.comp0010.model.Student;
+import uk.ac.ucl.comp0010.repository.GradeRepository;
 import uk.ac.ucl.comp0010.repository.ModuleRepository;
 import uk.ac.ucl.comp0010.repository.RegistrationRepository;
 import uk.ac.ucl.comp0010.repository.StudentRepository;
@@ -20,6 +23,9 @@ public class RegistrationService {
     private final RegistrationRepository registrationRepository;
     private final StudentRepository studentRepository;
     private final ModuleRepository moduleRepository;
+    @Autowired
+    private GradeRepository gradeRepository;
+    
 
     @Autowired
     public RegistrationService(RegistrationRepository registrationRepository, StudentRepository studentRepository, ModuleRepository moduleRepository) {
@@ -76,4 +82,10 @@ public class RegistrationService {
                 .orElseThrow(() -> new Exception("Registration not found for student ID: " + studentId + " and module code: " + moduleCode));
         registrationRepository.delete(registration);
     }
+
+    // Get all grades for a student
+    public List<Grade> getGradesByModule(String moduleCode) {
+        return gradeRepository.findByModuleCode(moduleCode);
+    }
+
 }
